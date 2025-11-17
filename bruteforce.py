@@ -1,4 +1,5 @@
 from itertools import combinations
+from utils import measure_execution_time
 import csv
 
 class Action:
@@ -28,6 +29,7 @@ def create_action_objects(action_data):
         actions.append(action)
     return actions
 
+@measure_execution_time
 def find_best_combination(actions, budget):
     all_combinations = []
     valid_combinations = []
@@ -75,3 +77,15 @@ if __name__ == "__main__":
     action_data = extract_action_data(file_path)
     actions = create_action_objects(action_data)
     find_best_combination(actions, 500)
+
+
+    """
+    Je veux comprendre pourquoi mon code est lent.
+    Je veux optimiser mon code pour qu'il soit plus rapide.
+    Je veux utiliser des algorithmes plus efficaces pour résoudre le problème du sac à dos.
+
+    Ecrire l'algorithme du sac à dos pour comparer les performances avec l'algorithme de force brute.
+    Rajouter un décorateur pour mesurer le temps d'exécution des fonctions.
+    Faire varier le budget poru voir l'impact sur les performances.
+    Faire varier le nombre d'actions pour voir l'impact sur les performances.
+    """
