@@ -82,7 +82,7 @@ def find_best_combination_1(actions, budget):
     """
     items = []
     for action in actions:
-        if int(action.cost) <= 0:
+        if action.cost <= 0:
             continue
         else:
             item = (action.name, ceil(action.cost), float(action.benefit_percent) * action.cost / 100)
@@ -127,7 +127,8 @@ def find_best_combination_2(actions, budget):
     """
     items = []
     for action in actions:
-        if action.cost <= 0:
+        # if action.cost <= 1:
+        if (float(action.benefit_percent)/100) * action.cost <= 5:
             continue
         else:
             item = (action.name, int(action.cost * 100), float(action.benefit_percent) * action.cost)
@@ -162,7 +163,7 @@ def find_best_combination_2(actions, budget):
 
 if __name__ == "__main__":
 
-    file_path = 'dataset2.csv'
+    file_path = 'dataset1.csv'
 
     action_data = extract_action_data(file_path)
     actions = create_action_objects(action_data)
@@ -172,12 +173,3 @@ if __name__ == "__main__":
     print("Best combination of actions:")
     for item in best_combo:
         print(item)
-
-
-    """
-    Faire varier le budget pour voir l'impact sur les performances.
-    Faire varier le nombre d'actions pour voir l'impact sur les performances.
-    Finir la partie code
-    S+1 finir la partie diapo + démarrage P6
-
-    """
