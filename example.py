@@ -3,9 +3,6 @@ from utils import measure_memory_usage
 
 actions = [("action 1", 2, 10), ("action 2", 3, 20), ("action 3", 4, 30), ("action 4", 5, 40), ("action 5", 6, 50)]
 
-
-@measure_memory_usage
-# @measure_execution_time
 def find_best_combination(actions, budget):
     """
     Solves the knapsack problem to find the best combination of actions.
@@ -62,12 +59,4 @@ if __name__ == "__main__":
     print("Best combination of actions:")
     for item in best_combo:
         print(item)
-
-
-    """
-    Faire varier le budget pour voir l'impact sur les performances.
-    Faire varier le nombre d'actions pour voir l'impact sur les performances.
-    Finir la partie code
-    S+1 finir la partie diapo + démarrage P6
-
-    """
+        

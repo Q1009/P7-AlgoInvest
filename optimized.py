@@ -70,97 +70,6 @@ def find_best_combination(actions, budget):
     selected_items.reverse()
     return dp[n][budget], total_cost, selected_items
 
-@measure_memory_usage
-# @measure_execution_time
-def find_best_combination_1(actions, budget):
-    """
-    Solves the knapsack problem to find the best combination of actions.
-
-    :param actions: A list of Action objects.
-    :param budget: The maximum budget.
-    :return: The maximum benefit and the list of selected actions.
-    """
-    items = []
-    for action in actions:
-        if action.cost <= 0:
-            continue
-        else:
-            item = (action.name, ceil(action.cost), float(action.benefit_percent) * action.cost / 100)
-            items.append(item)
-    n = len(items)
-    print(f"Number of valid items: {n}")
-    # Create a 2D DP array to store the maximum value at each n and weight
-    dp = [[0 for _ in range(budget + 1)] for _ in range(n + 1)]
-
-    # Build the DP table
-    for i in range(1, n + 1):
-        name, cost, benefit = items[i - 1]
-        for w in range(1, budget + 1):
-            if cost <= w:
-                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - cost] + benefit)
-            else:
-                dp[i][w] = dp[i - 1][w]
-
-    # Backtrack to find the items included in the optimal solution
-    w = budget
-    total_cost = 0
-    selected_items = []
-
-    for i in range(n, 0, -1):
-        if dp[i][w] != dp[i - 1][w]:
-            selected_items.append(items[i - 1])
-            w -= items[i - 1][1]
-            total_cost += items[i - 1][1]
-
-    selected_items.reverse()
-    return dp[n][budget], total_cost, selected_items
-
-@measure_memory_usage
-# @measure_execution_time
-def find_best_combination_2(actions, budget):
-    """
-    Solves the knapsack problem to find the best combination of actions.
-
-    :param actions: A list of Action objects.
-    :param budget: The maximum budget.
-    :return: The maximum benefit and the list of selected actions.
-    """
-    items = []
-    for action in actions:
-        # if action.cost <= 1:
-        if (float(action.benefit_percent)/100) * action.cost <= 5:
-            continue
-        else:
-            item = (action.name, int(action.cost * 100), float(action.benefit_percent) * action.cost)
-            items.append(item)
-    n = len(items)
-    print(f"Number of valid items: {n}")
-    # Create a 2D DP array to store the maximum value at each n and weight
-    dp = [[0 for _ in range(budget + 1)] for _ in range(n + 1)]
-
-    # Build the DP table
-    for i in range(1, n + 1):
-        name, cost, benefit = items[i - 1]
-        for w in range(1, budget + 1):
-            if cost <= w:
-                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - cost] + benefit)
-            else:
-                dp[i][w] = dp[i - 1][w]
-
-    # Backtrack to find the items included in the optimal solution
-    w = budget
-    total_cost = 0
-    selected_items = []
-
-    for i in range(n, 0, -1):
-        if dp[i][w] != dp[i - 1][w]:
-            selected_items.append(items[i - 1])
-            w -= items[i - 1][1]
-            total_cost += items[i - 1][1]
-
-    selected_items.reverse()
-    return dp[n][budget], total_cost, selected_items
-
 # @measure_memory_usage
 @measure_execution_time
 def find_best_combination_3(actions, budget):
@@ -179,8 +88,9 @@ def find_best_combination_3(actions, budget):
             action.benefit_percent = action.benefit_percent * action.cost / 100
             items.append(action)
     n = len(items)
-    print(f"Number of valid items: {n}")
-    print(f"Budget in cents: {budget}")
+    # print(f"Number of valid items: {n}")
+    # print(f"Budget in cents: {budget}")
+
     # Create a 2D DP array to store the maximum value at each n and weight
     dp = [[0 for _ in range(budget + 1)] for _ in range(n + 1)]
 
@@ -214,6 +124,7 @@ if __name__ == "__main__":
     actions = create_action_objects(action_data)
     max_value, total_cost, best_combo = find_best_combination_3(actions, budget)
     print("Best combination of actions:")
+    
     for item in best_combo:
         print(item.name, round(item.cost/100,2), "€")
     print(f"Total cost: {round(total_cost/100,2)}€ out of {budget}€")
