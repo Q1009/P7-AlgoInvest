@@ -57,12 +57,13 @@ def greedy_knapsack(actions: List[Action], max_weight):
 if __name__ == "__main__":
 
     file_path = 'dataset2.csv'
+    budget = 500
 
     action_data = extract_action_data(file_path)
     actions = create_action_objects(action_data)
-    max_value, total_cost, best_combo = greedy_knapsack(actions, 500)
-    print (f"Maximum benefit: {max_value}")
-    print(f"Total cost: {total_cost}")
+    max_value, total_cost, best_combo = greedy_knapsack(actions, budget)
     print("Best combination of actions:")
     for item in best_combo:
         print(item.name, item.cost, item.benefit_percent)
+    print(f"Total cost: {round(total_cost,2)}€ out of {budget}€")
+    print (f"Total return: {round(max_value,2)}€")

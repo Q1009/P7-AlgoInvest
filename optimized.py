@@ -12,7 +12,7 @@ class Action:
     def from_csv(cls, csv_string):
         name, cost, benefit = csv_string.split(',')
         benefit_percent = benefit.rstrip('\n')
-        return cls(name, float(cost), benefit_percent)
+        return cls(name, float(cost), float(benefit_percent))
     
 def extract_action_data(file_path):
     actions = []
@@ -161,15 +161,60 @@ def find_best_combination_2(actions, budget):
     selected_items.reverse()
     return dp[n][budget], total_cost, selected_items
 
+# @measure_memory_usage
+@measure_execution_time
+def find_best_combination_3(actions, budget):
+    """
+    Solves the knapsack problem to find the best combination of actions.
+
+    :param actions: A list of Action objects.
+    :param budget: The maximum budget.
+    :return: The maximum benefit, the total cost and the list of selected actions.
+    """
+    items = []
+    budget = budget * 100
+    for action in actions:
+        if action.cost > 0:
+            action.cost = int(action.cost * 100)
+            action.benefit_percent = action.benefit_percent * action.cost / 100
+            items.append(action)
+    n = len(items)
+    print(f"Number of valid items: {n}")
+    print(f"Budget in cents: {budget}")
+    # Create a 2D DP array to store the maximum value at each n and weight
+    dp = [[0 for _ in range(budget + 1)] for _ in range(n + 1)]
+
+    # Build the DP table
+    for i in range(1, n + 1):
+        for w in range(1, budget + 1):
+            if items[i - 1].cost <= w:
+                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - items[i - 1].cost] + items[i - 1].benefit_percent)
+            else:
+                dp[i][w] = dp[i - 1][w]
+
+    # Backtrack to find the items included in the optimal solution
+    w = budget
+    total_cost = 0
+    selected_items = []
+
+    for i in range(n, 0, -1):
+        if dp[i][w] != dp[i - 1][w]:
+            selected_items.append(items[i - 1])
+            w -= items[i - 1].cost
+            total_cost += items[i - 1].cost
+
+    return dp[n][budget], total_cost, selected_items
+
 if __name__ == "__main__":
 
-    file_path = 'dataset1.csv'
+    file_path = 'dataset2.csv'
+    budget = 500
 
     action_data = extract_action_data(file_path)
     actions = create_action_objects(action_data)
-    max_value, total_cost, best_combo = find_best_combination_2(actions, 50000)
-    print (f"Maximum benefit: {max_value}")
-    print(f"Total cost: {total_cost}")
+    max_value, total_cost, best_combo = find_best_combination_3(actions, budget)
     print("Best combination of actions:")
     for item in best_combo:
-        print(item)
+        print(item.name, round(item.cost/100,2), "€")
+    print(f"Total cost: {round(total_cost/100,2)}€ out of {budget}€")
+    print (f"Total return: {round(max_value/100,2)}€")
